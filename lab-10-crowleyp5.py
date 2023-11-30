@@ -35,7 +35,7 @@ sns.barplot(
     data=top_names_selected_year[top_names_selected_year['sex'] == 'M'],
     x='name',
     y='n',
-    palette=[palette[0], palette[1]],  # Use the second color for males
+    palette=[palette[1]],  # Use the second color for males
     ax=axes[1]
 )
 axes[1].set_title(f'Top Baby Names for Males in {selected_year}')
