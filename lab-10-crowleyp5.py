@@ -38,7 +38,7 @@ least_common_names = (
 )
 
 # Create bar charts for the top 10 and least common 10 baby names by 'n'
-fig, ax = plt.subplots(2, 1, figsize=(10, 8))  # Set the figure size
+fig, ax = plt.subplots(2, 1)  # Set the figure size
 
 # Function to label the x-axis with rank
 def add_rank_labels(ax, data):
