@@ -81,8 +81,9 @@ if selected_name:
         st.pyplot()
     else:
         st.warning(f"Name '{selected_name}' not found in the dataset.")
-else:
-    st.info("Enter a name to see popularity over time.")
 
 # Streamlit app description
 st.text("Explore the top baby names and their popularity over time.")
+
+# Disable the PyplotGlobalUse warning
+st.set_option('deprecation.showPyplotGlobalUse', False)
