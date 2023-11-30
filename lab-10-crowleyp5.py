@@ -6,7 +6,7 @@ import seaborn as sns
 data_url = "https://raw.githubusercontent.com/esnt/Data/main/Names/popular_names.csv"
 data = pd.read_csv(data_url)
 
-st.title("Baby Names Analysis")
+st.title("Popular Names")
 st.header("Top Baby Names Analysis")
 
 selected_year = st.slider("Select a year:", min_value=1910, max_value=2021, value=1910, step=1)
