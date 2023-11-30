@@ -59,22 +59,28 @@ axes[1].set_xlabel('Name')
 axes[0].tick_params(axis='x', rotation=45)
 axes[1].tick_params(axis='x', rotation=45)
 
-# Select a name for popularity over time
-selected_name = st.selectbox(f"Select a name to see popularity over time in {selected_year}:", top_names_selected_year['name'].unique())
+# User input for the name
+selected_name = st.text_input(f"Enter a name to see popularity over time in {selected_year}:")
 
 # Filter data for the selected name and plot popularity over time
-name_data = data[(data['name'] == selected_name) & (data['year'] >= selected_year - 10) & (data['year'] <= selected_year + 10)]
-sns.lineplot(
-    data=name_data,
-    x='year',
-    y='n',
-    hue='sex',
-    palette=palette[:2],  # Use the first two colors for females and males
-    ax=axes[2]
-)
-axes[2].set_title(f'Popularity of {selected_name} Over Time')
-axes[2].set_xlabel('Year')
-axes[2].set_ylabel('Count (n)')
+if selected_name:
+    name_data = data[(data['name'] == selected_name) & (data['year'] >= selected_year - 10) & (data['year'] <= selected_year + 10)]
+    if not name_data.empty:
+        sns.lineplot(
+            data=name_data,
+            x='year',
+            y='n',
+            hue='sex',
+            palette=palette[:2],  # Use the first two colors for females and males
+            ax=axes[2]
+        )
+        axes[2].set_title(f'Popularity of {selected_name} Over Time')
+        axes[2].set_xlabel('Year')
+        axes[2].set_ylabel('Count (n)')
+    else:
+        st.warning(f"Name '{selected_name}' not found in the dataset.")
+else:
+    st.info("Enter a name to see popularity over time.")
 
 # Adjust spacing between subplots
 plt.tight_layout()
