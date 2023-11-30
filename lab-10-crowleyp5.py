@@ -51,7 +51,8 @@ if selected_name:
             x='year',
             y='n',
             hue='sex',
-            palette=[palette[0], palette[1]],  # Use the first two colors for females and males
+            palette=[palette[0], palette[1]], 
+            hue_order=['F', 'M'], 
             ax=axes[2]
         )
         axes[2].set_title(f'Popularity of {selected_name} Over Time')
