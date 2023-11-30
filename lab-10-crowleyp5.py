@@ -26,8 +26,8 @@ top_names_selected_year = (
     .sort_values(by='n', ascending=False)
 )
 
-# Create subplots for males and females
-fig, axes = plt.subplots(1, 2, figsize=(18, 6))  # 2 subplots side by side
+# Create subplots for males and females, double the size
+fig, axes = plt.subplots(1, 2, figsize=(18, 9))  # 2 subplots side by side with doubled height
 
 # Define color palette
 palette = sns.color_palette("husl")
@@ -67,7 +67,7 @@ if selected_name:
     name_data = data[(data['name'] == selected_name) & (data['year'] >= selected_year - 10) & (data['year'] <= selected_year + 10)]
     if not name_data.empty:
         # Create a separate plot for popularity over time
-        plt.figure(figsize=(12, 6))
+        plt.figure(figsize=(18, 9))  # Double the size for the popularity over time plot
         sns.lineplot(
             data=name_data,
             x='year',
