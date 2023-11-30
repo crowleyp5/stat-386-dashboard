@@ -12,7 +12,7 @@ st.title("Baby Names Analysis")
 st.header("Top Baby Names Analysis")
 
 # Filter data by year
-selected_year = st.slider("Select a year:", min_value=1880, max_value=2020, value=1910, step=1)
+selected_year = st.slider("Select a year:", min_value=1910, max_value=2021, value=1910, step=1)
 data_selected_year = data[data['year'] == selected_year]
 
 # Calculate the top 10 baby names by 'n' for both genders
@@ -26,8 +26,8 @@ top_names_selected_year = (
     .sort_values(by='n', ascending=False)
 )
 
-# Create subplots for males, females, and popularity over time
-fig, axes = plt.subplots(1, 3, figsize=(18, 6), gridspec_kw={'width_ratios': [1, 1, 2]})  # 3 subplots side by side
+# Create subplots for males and females
+fig, axes = plt.subplots(1, 2, figsize=(18, 6))  # 2 subplots side by side
 
 # Define color palette
 palette = sns.color_palette("husl")
@@ -62,31 +62,27 @@ axes[1].tick_params(axis='x', rotation=45)
 # User input for the name
 selected_name = st.text_input(f"Enter a name to see popularity over time in {selected_year}:")
 
-# Filter data for the selected name and plot popularity over time
+# Filter data for the selected name
 if selected_name:
     name_data = data[(data['name'] == selected_name) & (data['year'] >= selected_year - 10) & (data['year'] <= selected_year + 10)]
     if not name_data.empty:
+        # Create a separate plot for popularity over time
+        plt.figure(figsize=(12, 6))
         sns.lineplot(
             data=name_data,
             x='year',
             y='n',
             hue='sex',
             palette=palette[:2],  # Use the first two colors for females and males
-            ax=axes[2]
         )
-        axes[2].set_title(f'Popularity of {selected_name} Over Time')
-        axes[2].set_xlabel('Year')
-        axes[2].set_ylabel('Count (n)')
+        plt.title(f'Popularity of {selected_name} Over Time')
+        plt.xlabel('Year')
+        plt.ylabel('Count (n)')
+        st.pyplot()
     else:
         st.warning(f"Name '{selected_name}' not found in the dataset.")
 else:
     st.info("Enter a name to see popularity over time.")
-
-# Adjust spacing between subplots
-plt.tight_layout()
-
-# Display the Seaborn subplots within Streamlit
-st.pyplot(fig)
 
 # Streamlit app description
 st.text("Explore the top baby names and their popularity over time.")
