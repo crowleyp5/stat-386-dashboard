@@ -27,7 +27,7 @@ top_names_selected_year = (
 )
 
 # Create a subplot with three plots
-fig, axes = plt.subplots(3, 1, figsize=(18, 18))  # 3 subplots stacked vertically with increased height
+fig, axes = plt.subplots(3, 1, figsize=(18, 9))  # 3 subplots stacked vertically with increased height
 
 # Define color palette
 palette = sns.color_palette("husl")
