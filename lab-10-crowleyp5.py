@@ -78,7 +78,7 @@ if selected_name:
         plt.title(f'Popularity of {selected_name} Over Time')
         plt.xlabel('Year')
         plt.ylabel('Count (n)')
-        st.pyplot()
+        st.pyplot(fig)  # Pass the figure object to st.pyplot()
     else:
         st.warning(f"Name '{selected_name}' not found in the dataset.")
 else:
@@ -86,3 +86,6 @@ else:
 
 # Streamlit app description
 st.text("Explore the top baby names and their popularity over time.")
+
+# Disable the PyplotGlobalUse warning
+st.set_option('deprecation.showPyplotGlobalUse', False)
