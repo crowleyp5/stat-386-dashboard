@@ -40,7 +40,7 @@ sns.barplot(
 )
 axes[1].set_title(f'Top Baby Names for Males in {selected_year}')
 axes[1].set_xlabel('Name')
-axes[0].set_ylabel('Frequency')
+axes[1].set_ylabel('Frequency')
 axes[0].tick_params(axis='x', rotation=45)
 axes[1].tick_params(axis='x', rotation=45)
 selected_name = st.text_input(f"Enter a name to see popularity over time and see top names in {selected_year}:")
