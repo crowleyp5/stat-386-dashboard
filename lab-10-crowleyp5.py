@@ -22,7 +22,7 @@ top_names_selected_year = (
     .sort_values(by='n', ascending=False)
 )
 
-fig, axes = plt.subplots(3, 1, figsize=(18, 18), gridspec_kw={'height_ratios': [2, 2, 5]})
+fig, axes = plt.subplots(3, 1, figsize=(18, 18), gridspec_kw={'height_ratios': [5, 5, 5]})
 
 palette = sns.color_palette("husl")
 
