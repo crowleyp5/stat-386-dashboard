@@ -30,7 +30,7 @@ sns.barplot(
 )
 axes[0].set_title(f'Top Baby Names for Females in {selected_year}')
 axes[0].set_xlabel('Name')
-axes[0].set_ylabel('Count (n)')
+axes[0].set_ylabel('Frequency')
 sns.barplot(
     data=top_names_selected_year[top_names_selected_year['sex'] == 'M'],
     x='name',
@@ -40,6 +40,7 @@ sns.barplot(
 )
 axes[1].set_title(f'Top Baby Names for Males in {selected_year}')
 axes[1].set_xlabel('Name')
+axes[0].set_ylabel('Frequency')
 axes[0].tick_params(axis='x', rotation=45)
 axes[1].tick_params(axis='x', rotation=45)
 selected_name = st.text_input(f"Enter a name to see popularity over time and see top names in {selected_year}:")
@@ -57,7 +58,7 @@ if selected_name:
         )
         axes[2].set_title(f'Popularity of {selected_name} Over Time')
         axes[2].set_xlabel('Year')
-        axes[2].set_ylabel('Count (n)')
+        axes[2].set_ylabel('Frequency')
     else:
         st.warning(f"Name '{selected_name}' not found in the dataset.")
 else:
