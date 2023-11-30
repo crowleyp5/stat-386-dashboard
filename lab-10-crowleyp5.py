@@ -6,7 +6,7 @@ import seaborn as sns
 data_url = "https://raw.githubusercontent.com/esnt/Data/main/Names/popular_names.csv"
 data = pd.read_csv(data_url)
 
-st.title("Popular Names")
+st.title("Baby Names Analysis")
 st.header("Top Baby Names Analysis")
 
 selected_year = st.slider("Select a year:", min_value=1910, max_value=2021, value=1910, step=1)
@@ -22,7 +22,7 @@ top_names_selected_year = (
     .sort_values(by='n', ascending=False)
 )
 
-fig, axes = plt.subplots(3, 1, figsize=(12, 16), gridspec_kw={'height_ratios': [5, 5, 5]})
+fig, axes = plt.subplots(3, 1, figsize=(18, 18), gridspec_kw={'height_ratios': [5, 5, 6]})
 
 palette = sns.color_palette("husl")
 
@@ -46,15 +46,14 @@ sns.barplot(
 )
 axes[1].set_title(f'Top Baby Names for Males in {selected_year}')
 axes[1].set_xlabel('Name')
-
-axes[0].tick_params(axis='x', rotation=45)
-axes[1].tick_params(axis='x', rotation=45)
+axes[1].set_ylabel('Count (n)')
 
 selected_name = st.text_input(f"Enter a name to see popularity over time in {selected_year}:")
 
 if selected_name:
-    name_data = data[(data['name'] == selected_name) & (data['year'] >= selected_year - 10) & (data['year'] <= selected_year + 10)]
+    name_data = data[(data['name'] == selected_name) & (data['year'] >= 1910) & (data['year'] <= 2021)]
     if not name_data.empty:
+        # Create a separate plot for popularity over time
         sns.lineplot(
             data=name_data,
             x='year',
@@ -66,13 +65,13 @@ if selected_name:
         axes[2].set_title(f'Popularity of {selected_name} Over Time')
         axes[2].set_xlabel('Year')
         axes[2].set_ylabel('Count (n)')
+        # Set fixed x-axis limits
+        axes[2].set_xlim(1910, 2021)
     else:
         st.warning(f"Name '{selected_name}' not found in the dataset.")
 else:
-    st.info("Enter a name to see popularity over time.")
+    axes[2].set_visible(False)
 
 plt.tight_layout()
-
-st.pyplot(fig)
 
 st.text("Explore the top baby names and their popularity over time.")
