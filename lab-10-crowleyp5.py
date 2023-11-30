@@ -44,7 +44,7 @@ axes[0].tick_params(axis='x', rotation=45)
 axes[1].tick_params(axis='x', rotation=45)
 selected_name = st.text_input(f"Enter a name to see popularity over time in {selected_year}:")
 if selected_name:
-    name_data = data[(data['name'] == selected_name)
+    name_data = data[(data['name'] == selected_name) & (data['year'] >= 1910) & (data['year'] <= 2021)]
     if not name_data.empty:
         sns.lineplot(
             data=name_data,
