@@ -7,31 +7,46 @@ data_url = "https://raw.githubusercontent.com/esnt/Data/main/Names/popular_names
 data = pd.read_csv(data_url)
 
 # App title
-st.title('Popular Names Analysis')
+st.title('Baby Names Analysis')
 
 # Sidebar with user input
-selected_columns = st.sidebar.multiselect('Select columns:', data.columns)
+selected_year = st.sidebar.selectbox('Select a year:', data['year'].unique())
 
-# Check if 'year', 'name', and 'n' are selected
-if 'year' in selected_columns and 'name' in selected_columns and 'n' in selected_columns:
-    st.write('Selected columns:', selected_columns)
-    
-    # Group data by year and name, summing the counts 'n'
-    grouped_data = data.groupby(['year', 'name'])['n'].sum().reset_index()
+# Filter data for the selected year
+filtered_data = data[data['year'] == selected_year]
 
-    # Create a bar chart
-    fig, ax = plt.subplots(figsize=(10, 6))
-    for name, group in grouped_data.groupby('name'):
-        ax.plot(group['year'], group['n'], label=name)
+# Show top 5 baby names by 'n' for both genders
+st.header(f'Top 5 Baby Names in {selected_year}')
+top_names = (
+    filtered_data.groupby(['name', 'sex'])['n']
+    .sum()
+    .reset_index()
+    .sort_values(by='n', ascending=False)
+    .head(5)
+)
+st.bar_chart(top_names.set_index('name'))
 
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Count')
-    ax.set_title('Name Popularity Over Time')
-    ax.legend()
+# Show least common baby names by 'n' for both genders
+st.header(f'Least Common Baby Names in {selected_year}')
+least_common_names = (
+    filtered_data.groupby(['name', 'sex'])['n']
+    .sum()
+    .reset_index()
+    .sort_values(by='n')
+    .head(5)
+)
+st.bar_chart(least_common_names.set_index('name'))
 
-    # Display the chart
-    st.pyplot(fig)
+# User selects a name to see 'n' by year
+selected_name = st.sidebar.text_input('Enter a name to see its popularity over time:')
+if selected_name:
+    st.header(f'Popularity of {selected_name} Over Time')
+    name_data = filtered_data[filtered_data['name'] == selected_name]
+    if not name_data.empty:
+        st.line_chart(name_data.groupby('year')['n'].sum())
+    else:
+        st.warning(f'{selected_name} not found in the dataset for {selected_year}')
 
 # Main content
-st.write('Here is some data:')
-st.write(data)
+st.write('Baby Name Data:')
+st.write(filtered_data)
