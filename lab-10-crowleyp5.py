@@ -38,8 +38,7 @@ least_common_names = (
 )
 
 # Create bar charts for the top 10 and least common 10 baby names by 'n'
-fig, ax = plt.subplots(2, 1, figsize=(10, 12))
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'tab:blue', 'tab:orange', 'tab:green', 'tab:red']
+fig, ax = plt.subplots(2, 1, figsize=(10, 8))  # Set the figure size
 
 # Function to label the x-axis with rank
 def add_rank_labels(ax, data):
@@ -47,13 +46,13 @@ def add_rank_labels(ax, data):
         ax.text(i, row['n'], f'{i + 1}', ha='center', va='bottom', fontsize=10)
 
 # Top 10 names for both genders
-ax[0].bar(top_names.index, top_names['n'], color=colors, label=top_names['sex'])
+ax[0].bar(top_names.index, top_names['n'], color='b', label=top_names['sex'])
 ax[0].set_xticks(range(len(top_names)))
 ax[0].set_xticklabels([])
 add_rank_labels(ax[0], top_names)
 
 # Least common 10 names for both genders
-ax[1].bar(least_common_names.index, least_common_names['n'], color=colors, label=least_common_names['sex'])
+ax[1].bar(least_common_names.index, least_common_names['n'], color='g', label=least_common_names['sex'])
 ax[1].set_xticks(range(len(least_common_names)))
 ax[1].set_xticklabels([])
 add_rank_labels(ax[1], least_common_names)
