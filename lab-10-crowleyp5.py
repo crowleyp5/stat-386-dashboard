@@ -1,83 +1,86 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
-# Load data from the new dataset URL
+# Load data from the dataset URL
 data_url = "https://raw.githubusercontent.com/esnt/Data/main/Names/popular_names.csv"
 data = pd.read_csv(data_url)
 
-# App title
-st.title('Baby Names Analysis')
+# Streamlit app title and description
+st.title("Baby Names Analysis")
+st.header("Top Baby Names Analysis")
 
-# Sidebar with user input
-selected_year = st.sidebar.selectbox('Select a year:', data['year'].unique())
-
-# Filter data for the selected year
-filtered_data = data[data['year'] == selected_year]
+# Filter data by year
+selected_year = st.slider("Select a year:", min_value=1880, max_value=2020, value=1910, step=1)
+data_selected_year = data[data['year'] == selected_year]
 
 # Calculate the top 10 baby names by 'n' for both genders
-top_names = (
-    filtered_data.groupby(['name', 'sex'])['n']
+top_names_selected_year = (
+    data_selected_year.groupby(['name', 'sex'])['n']
     .sum()
     .reset_index()
-    .sort_values(by=['sex', 'n'], ascending=[True, False])
+    .sort_values(by='n', ascending=False)
     .groupby('sex')
     .head(10)
-    .sort_values(by=['sex', 'n'], ascending=[True, False])
+    .sort_values(by='n', ascending=False)
 )
 
-# Calculate the least common 10 baby names by 'n' for both genders
-least_common_names = (
-    filtered_data.groupby(['name', 'sex'])['n']
-    .sum()
-    .reset_index()
-    .sort_values(by=['sex', 'n'])
-    .groupby('sex')
-    .head(10)
-    .sort_values(by=['sex', 'n'])
+# Create subplots for males, females, and popularity over time
+fig, axes = plt.subplots(1, 3, figsize=(18, 6), gridspec_kw={'width_ratios': [1, 1, 2]})  # 3 subplots side by side
+
+# Define color palette
+palette = sns.color_palette("husl")
+
+# Create bar chart for top baby names for females
+sns.barplot(
+    data=top_names_selected_year[top_names_selected_year['sex'] == 'F'],
+    x='name',
+    y='n',
+    palette=[palette[0]],  # Use the first color for females
+    ax=axes[0]
 )
+axes[0].set_title(f'Top Baby Names for Females in {selected_year}')
+axes[0].set_xlabel('Name')
+axes[0].set_ylabel('Count (n)')
 
-# Create bar charts for the top 10 and least common 10 baby names by 'n'
-fig, ax = plt.subplots(2, 1)  # Set the figure size
+# Create bar chart for top baby names for males
+sns.barplot(
+    data=top_names_selected_year[top_names_selected_year['sex'] == 'M'],
+    x='name',
+    y='n',
+    palette=[palette[1]],  # Use the second color for males
+    ax=axes[1]
+)
+axes[1].set_title(f'Top Baby Names for Males in {selected_year}')
+axes[1].set_xlabel('Name')
 
-# Function to label the x-axis with rank
-def add_rank_labels(ax, data):
-    for i, (_, row) in enumerate(data.iterrows()):
-        ax.text(i, row['n'], f'{i + 1}', ha='center', va='bottom', fontsize=10)
+# Rotate x-axis labels for better readability
+axes[0].tick_params(axis='x', rotation=45)
+axes[1].tick_params(axis='x', rotation=45)
 
-# Top 10 names for both genders
-ax[0].bar(top_names.index, top_names['n'], color='b', label=top_names['sex'])
-ax[0].set_xticks(range(len(top_names)))
-ax[0].set_xticklabels([])
-add_rank_labels(ax[0], top_names)
+# Select a name for popularity over time
+selected_name = st.selectbox(f"Select a name to see popularity over time in {selected_year}:", top_names_selected_year['name'].unique())
 
-# Least common 10 names for both genders
-ax[1].bar(least_common_names.index, least_common_names['n'], color='g', label=least_common_names['sex'])
-ax[1].set_xticks(range(len(least_common_names)))
-ax[1].set_xticklabels([])
-add_rank_labels(ax[1], least_common_names)
+# Filter data for the selected name and plot popularity over time
+name_data = data[(data['name'] == selected_name) & (data['year'] >= selected_year - 10) & (data['year'] <= selected_year + 10)]
+sns.lineplot(
+    data=name_data,
+    x='year',
+    y='n',
+    hue='sex',
+    palette=palette[:2],  # Use the first two colors for females and males
+    ax=axes[2]
+)
+axes[2].set_title(f'Popularity of {selected_name} Over Time')
+axes[2].set_xlabel('Year')
+axes[2].set_ylabel('Count (n)')
 
-# Set y-axis label
-ax[0].set_ylabel('Count (n)')
-ax[1].set_ylabel('Count (n)')
+# Adjust spacing between subplots
+plt.tight_layout()
 
-# Set chart titles
-ax[0].set_title(f'Top 10 Baby Names in {selected_year}')
-ax[1].set_title(f'Least Common 10 Baby Names in {selected_year}')
-
-# Display the charts
+# Display the Seaborn subplots within Streamlit
 st.pyplot(fig)
 
-# User selects a name to see 'n' by year
-selected_name = st.sidebar.text_input('Enter a name to see its popularity over time:')
-if selected_name:
-    st.header(f'Popularity of {selected_name} Over Time')
-    name_data = data[data['name'] == selected_name]
-    if not name_data.empty:
-        st.line_chart(name_data.groupby(['year', 'sex'])['n'].sum().unstack().fillna(0))
-    else:
-        st.warning(f'{selected_name} not found in the dataset')
-
-# Main content
-st.write('Here is some data:')
-st.write(filtered_data)
+# Streamlit app description
+st.text("Explore the top baby names and their popularity over time.")
