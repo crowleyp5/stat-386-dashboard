@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 
-# Load data
-data = pd.read_csv('loldata_cleaned.csv')
+# Load data from the new dataset URL
+data_url = "https://raw.githubusercontent.com/esnt/Data/main/Names/popular_names.csv"
+data = pd.read_csv(data_url)
 
 # App title
-st.title('League of Legends: Red Side vs Blue Side Comparison')
+st.title('Popular Names Analysis')
 
 # Sidebar with user input
 selected_columns = st.sidebar.multiselect('Select columns for the bar chart:', data.columns)
